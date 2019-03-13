@@ -1,9 +1,18 @@
 class PigLatinizer
   def piglatinize(string)
-    # replace all words starting with vowels with the word + "way"
-    string = string.gsub(/(\b[aeiouAEIOU]\w*)/, "\\1way")
-    # for all words starting with consonants, return the part from the first
-    # vowel to the end (\\2), then the leading consonants (\\1), + "ay"
-    string = string.gsub(/\b([b-df-hj-np-tv-zB-DF-HJ-NP-TV-Z]+)([A-Za-z]+)/, "\\2\\1ay")
+    string.gsub(/\w+/) do |word|
+      if word[0].match(/[aeiouAEIOU]/)
+        # if the first letter is a vowel, just add "way" to the end
+        "#{word}way"
+      else
+        # if the first letter is not a vowel, return the part from the first
+        # non-consonant to the end (\\2) + the leading consonants (\\1) + "ay"
+        word.gsub(/([b-df-hj-np-tv-zB-DF-HJ-NP-TV-Z]+)(.*)/, "\\2\\1ay")
+        # ^ using .* is more generalizable than [a-zA-Z] because it will capture
+        # apostrophes and other letters that aren't ASCII
+      end
+    end
+    # also can be made into one line like:
+    #string.gsub(/\w+/) {|word| word[0].match(/[aeiouAEIOU]/) ? "#{word}way" : word.gsub(/([b-df-hj-np-tv-zB-DF-HJ-NP-TV-Z]+)(.*)/, "\\2\\1ay")}
   end
 end
