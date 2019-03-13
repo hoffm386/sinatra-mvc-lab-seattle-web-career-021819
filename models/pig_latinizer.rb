@@ -1,15 +1,9 @@
 class PigLatinizer
   def piglatinize(string)
-    latinized_list = string.split.map do |word|
-      # makes a list like ["p", "o", "rk"], ["pl", "e", "ase"], or ["", "u", "ntil"]
-      parts_of_word = word.split(/([aeiouAEIOU])/, 2)
-      # first item is empty if it starts with a vowel
-      if parts_of_word[0] == ""
-        "#{word}way"
-      else
-        "#{parts_of_word[1]}#{parts_of_word[2]}#{parts_of_word[0]}ay"
-      end
-    end
-    latinized_list.join(" ")
+    # replace all words starting with vowels with the word + "way"
+    string = string.gsub(/(\b[aeiouAEIOU]\w*)/, "\\1way")
+    # for all words starting with consonants, return the part from the first
+    # vowel to the end (\\2), then the leading consonants (\\1), + "ay"
+    string = string.gsub(/\b([b-df-hj-np-tv-zB-DF-HJ-NP-TV-Z]+)([A-Za-z]+)/, "\\2\\1ay")
   end
 end
